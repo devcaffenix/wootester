@@ -13,6 +13,9 @@ class WFT_Ajax
 	{
 		add_action( 'wp_ajax_nopriv_wft_listener', array( $this, 'listener' ) );
     	add_action( 'wp_ajax_wft_listener', array( $this, 'listener' ) );
+
+        add_action( 'wp_ajax_nopriv_wft_load_filter', array( $this, 'load_filter' ) );
+        add_action( 'wp_ajax_wft_load_filter', array( $this, 'load_filter' ) );
 	}
 
 	/**
@@ -78,6 +81,16 @@ class WFT_Ajax
         echo json_encode( $_RESPONSE );
 
         die();
+    }
+
+    public function load_filter(){
+        $id = absint( $_POST['cat_id'] );
+        if( empty( $id ) )
+            return false;
+
+        wft_get_filter_fields( $id );
+
+        exit;
     }
 }
 

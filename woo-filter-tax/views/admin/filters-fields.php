@@ -1,9 +1,3 @@
-<?php
-function create_slug($string){
-   $slug=preg_replace('/[^A-Za-z0-9-]+/', '_', sanitize_title( $string ) );
-   return $slug;
-}
-?>
 <div class="woocommerce_options_panel">
 <p class="form-field coupon_amount_field ">
 	<label for="coupon_amount">Product Category</label>
@@ -13,7 +7,7 @@ function create_slug($string){
 		'show_option_none'   => __( 'Select Category', 'wft-filter-tax' ),
 		'option_none_value'  => '-1',
 		'hide_empty'         => 0, 
-		'selected'           => $post_metas['wft_product_cat'][0],
+		'selected'           => isset($post_metas['wft_product_cat'][0])?$post_metas['wft_product_cat'][0]:"",
 		'hierarchical'       => 1, 
 		'name'               => 'wft_product_cat',
 		'id'                 => 'wft_product_cat',

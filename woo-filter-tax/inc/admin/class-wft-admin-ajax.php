@@ -19,9 +19,16 @@ class WFT_Admin_Ajax
 		if( !defined( 'DOING_AJAX' ) || !DOING_AJAX )
 			return false;
 
+		if( empty( $_POST['cat_ids'] ) || !is_array( $_POST['cat_ids'] ) ){
+			echo "Please Choose a category to list filters.";
+			exit;
+		}
+
 		$ids = array_unique( $_POST['cat_ids'] );
-		if( empty( $ids ) )
-			return false;
+		if( empty( $ids ) ){
+			echo "Please Choose a category to list filters.";
+			exit;
+		}
 
 		$args['post_type'] = WFT_POST_TYPE;
 		$args['meta_query'] = array(

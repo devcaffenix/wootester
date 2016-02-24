@@ -1,0 +1,20 @@
+.wft-widget-wrapper{
+
+}
+
+.wft-widget-wrapper .wft-widget-field{
+	padding: 5px 0;
+}
+
+.wft-widget-wrapper .wft-widget-field label{
+	display: block;
+	padding: 3px 0 0 0;
+}
+
+.wft-widget-wrapper .wft-widget-field select{
+	width: 90%;
+}
+
+.wft-widget-wrapper .wft-widget-no-filters{
+	padding: 5px 0;
+}

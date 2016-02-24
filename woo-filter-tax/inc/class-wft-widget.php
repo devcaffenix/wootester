@@ -24,57 +24,44 @@ class WFT_Widget extends WP_Widget {
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-		$_args = array();
-		$_args['post_type'] = WFT_POST_TYPE;
-		$_args['posts_per_page'] = -1;
-		$results = get_posts( $_args );
-		
-		$product_cat_args = array(
-			'show_option_all'    => '',
-			'show_option_none'   => __( 'Select cateogry', 'wft-filter-tax' ),
-			'option_none_value'  => '-1',
-			'hide_empty'         => 0, 
-			// 'selected'           => $post_metas['wft_product_cat'][0],
-			'hierarchical'       => 1, 
-			'name'               => 'wft_filter[product_cat]',
-			'id'                 => 'product_cat',
-			'class'              => 'short select',
-			'taxonomy'           => 'product_cat',
-			'hide_if_empty'      => false,
-			'value_field'	     => 'term_id',	
-		);
 
-		wp_dropdown_categories( $product_cat_args );
+		$action_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
 
-		if( !empty( $results ) ):
-			foreach ($results as $key => $result) {
-				$filters = get_post_meta( $result->ID, 'wft_filter', true );
-				if( !empty( $filters ) ){
-					foreach ($filters as $key => $filter) {
-						echo $filter;
-						$slug = WFT_Tax_Slug::get( $filter );
-						$filter_args = array(
-							'show_option_all'    => '',
-							'show_option_none'   => __( 'Select Filter', 'wft-filter-tax' ),
-							'option_none_value'  => '-1',
-							'hide_empty'         => 0, 
-							// 'selected'           => $post_metas['wft_product_cat'][0],
-							'hierarchical'       => 1, 
-							'name'               => 'wft_filter['.$slug.']',
-							'id'                 => 'wft_product_cat',
-							'class'              => 'short select',
-							'taxonomy'           => $slug,
-							'hide_if_empty'      => false,
-							'value_field'	     => 'term_id',	
-						);
-
-						wp_dropdown_categories( $filter_args );
-					}
+		echo '<div class="wft-widget-wrapper">';
+			echo '<form name="" action="' .$action_url. '" method="get">';
+				if( isset( $_GET['orderby'] ) && '' != $_GET['orderby'] ){
+					echo '<input type="hidden" name="orderby" value="'.$_GET['orderby'].'" /> ';
 				}
-			}
 
-		endif;
+				echo '<div class="wft-widget-field">';
+					echo '<label for="product_cat">' . __( 'Category', 'woo-filter-tax' ) . '</label>';
+					$product_cat_args = array(
+						'show_option_all'    => '',
+						'show_option_none'   => __( 'Select cateogry', 'wft-filter-tax' ),
+						'option_none_value'  => '-1',
+						'hide_empty'         => 0, 
+						'selected'           => isset( $_GET['wft_filter_product_cat'] )?absint( $_GET['wft_filter_product_cat'] ):"",
+						'hierarchical'       => 1, 
+						'name'               => 'wft_filter_product_cat',
+						'id'                 => 'product_cat',
+						'class'              => 'short select',
+						'taxonomy'           => 'product_cat',
+						'hide_if_empty'      => false,
+						'value_field'	     => 'term_id',	
+					);
 
+					wp_dropdown_categories( $product_cat_args );
+				echo '</div>';
+
+				echo '<div id="wft-widget-response">';
+				if( isset( $_GET['wft_filter_product_cat'] ) && '' !== $_GET['wft_filter_product_cat']  ){
+					$taxonomies = wft_get_tax_id( $_GET );
+					wft_get_filter_fields( $_GET['wft_filter_product_cat'], $taxonomies );
+				}
+
+				echo '</div>';
+			echo '</form>';
+		echo '</div>';
 		echo $args['after_widget'];
 	}
 
@@ -113,3 +100,24 @@ add_action( 'widgets_init', 'wft_register_wiget');
 function wft_register_wiget(){
 	register_widget( 'WFT_Widget' );
 }
+
+
+function exclude_category( $query ) {
+    if ( is_shop() && $query->is_main_query() ) {
+    	if( !empty( $_GET ) ){
+    		$tax_query = array();
+    		$taxonomies = wft_get_tax_id( $_GET );
+    		if( !empty( $taxonomies ) ){
+    			foreach ($taxonomies as $key => $value) {
+    				$tax_query[] = array(
+							'taxonomy' => $key,
+							'field'    => 'id',
+							'terms'    => $value,
+						);
+    			}
+    			$query->set( 'tax_query', $tax_query );
+    		}
+    	}
+    }
+}
+add_action( 'pre_get_posts', 'exclude_category' );
