@@ -36,27 +36,30 @@ class WFT_Meta_Boxes
 
 			if( !empty( $wft_old_filters ) ){
 				foreach ($wft_old_filters as $filter => $filter_id) {
-					echo '<p class="form-field coupon_amount_field ">';
-						$_filter = ucfirst( str_replace( array('wft-', '-'), array(' ',' ' ), $filter ) );
-						echo '<label for="coupon_amount">'.$_filter.'</label>';
-							$args = array(
-								'show_option_all'    => '',
-								'show_option_none'   => __( 'Select Filter', 'wft-filter-tax' ),
-								'option_none_value'  => '-1',
-								'hide_empty'         => 0, 
-								'selected'           => $filter_id,
-								'hierarchical'       => 1, 
-								'name'               => 'wft_filter['.$filter.']',
-								'id'                 => 'wft_product_cat',
-								'class'              => 'short select',
-								'taxonomy'           => $filter,
-								'hide_if_empty'      => false,
-								'value_field'	     => 'term_id',	
-							);
+					$get_taxonomy = get_taxonomy( $filter );
+					if( $get_taxonomy ):
+						echo '<p class="form-field coupon_amount_field ">';
+							$_filter = ucfirst( str_replace( array('wft-', '-'), array(' ',' ' ), $filter ) );
+							echo '<label for="coupon_amount">'.$_filter.'</label>';
+								$args = array(
+									'show_option_all'    => '',
+									'show_option_none'   => __( 'Select Filter', 'wft-filter-tax' ),
+									'option_none_value'  => '-1',
+									'hide_empty'         => 0, 
+									'selected'           => $filter_id,
+									'hierarchical'       => 1, 
+									'name'               => 'wft_filter['.$filter.']',
+									'id'                 => 'wft_product_cat',
+									'class'              => 'short select',
+									'taxonomy'           => $filter,
+									'hide_if_empty'      => false,
+									'value_field'	     => 'term_id',	
+								);
 
-						wp_dropdown_categories( $args );
-						echo '<span class="woocommerce-help-tip"></span>';
-					echo '</p>';
+							wp_dropdown_categories( $args );
+							echo '<span class="woocommerce-help-tip"></span>';
+						echo '</p>';
+					endif;
 				}
 			}
 			echo '</div>';

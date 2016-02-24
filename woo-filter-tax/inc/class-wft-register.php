@@ -76,7 +76,7 @@ class WFT_Register
 				            'public' => true,
 				            'show_in_menu' => false,
 				            'show_in_quick_edit' => false,
-				            'rewrite' => false,
+				            'rewrite' => true,
 				            'hierarchical' => true,
 				        )
 				    );

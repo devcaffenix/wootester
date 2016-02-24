@@ -1,10 +1,10 @@
 <?php
 /**
-* Plugin Name: Woocommerce Filters
-* Description: WooCommerce tax filter plugin
+* Plugin Name: WooCommerce Filters
+* Description: WooCommerce  filter plugin
 * Plugin URI: http://kodiary.com
 * Author: caffenix
-* Author URI: http://kodiary.com
+* Author URI: http://kodairy.com
 * Version: 1.0
 * License: GPL2
 * Text Domain: woo-filter-tax
@@ -12,7 +12,7 @@
 */
 
 /*
-Copyright (C) 2016  Racase Lawaju  rakeshlawaju@gmail.com
+Copyright (C) 2016  Kodiary inof@kodiary.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -66,6 +66,7 @@ class woo_filter_tax {
 		include WFT_BASE . '/inc/class-wft-tax-slug.php';
 		include WFT_BASE . '/inc/class-wft-ajax.php';
 		include WFT_BASE . '/inc/class-wft-widget.php';
+		include WFT_BASE . '/inc/wft-template-tags.php';
 	}
 
 	private function define_constants(){
