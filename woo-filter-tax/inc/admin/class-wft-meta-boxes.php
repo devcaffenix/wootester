@@ -123,7 +123,8 @@ class WFT_Meta_Boxes
 	}
 
 	function filter_save( $post_id, $post ){
-
+	      // var_dump($_REQUEST);
+        //die('save');
 		// If this is just a revision, don't send the email.
 		if ( wp_is_post_revision( $post_id ) )
 			return;
@@ -137,14 +138,20 @@ class WFT_Meta_Boxes
 	    if ( isset( $_POST['wft_product_cat'] ) ) {
 	        update_post_meta( $post_id, 'wft_product_cat', sanitize_text_field( $_POST['wft_product_cat'] ) );
 	    }
+        if ( isset( $_REQUEST['tax_input']['product_cat'] ) ) {
+	        update_post_meta( $post_id, 'wft_product_cat', sanitize_text_field( $_REQUEST['tax_input']['product_cat'] ) );
+            wp_set_post_categories($post_id,sanitize_text_field( $_REQUEST['tax_input']['product_cat'][1] ) );
+	    }
 
-	    if ( isset( $_POST['wft_filter'] ) && !empty( $_POST['wft_filter'] ) ) {
-	        update_post_meta( $post_id, 'wft_filter', $_POST['wft_filter'] );
+	    if ( isset( $_REQUEST['wft_filter'] ) && !empty( $_REQUEST['wft_filter'] ) ) {
+	        update_post_meta( $post_id, 'wft_filter', $_REQUEST['wft_filter'] );
 	    }
 
 	}
 
 	function product_save( $post_id, $post ){
+	      //var_dump($_REQUEST);
+          //die();
 		// If this is just a revision, don't send the email.
 		if ( wp_is_post_revision( $post_id ) )
 			return;
@@ -154,18 +161,18 @@ class WFT_Meta_Boxes
 	        return;
 	    }
 
-	    if( empty( $_POST['wft_filter'] ) )
+	    if( empty( $_REQUEST['wft_filter'] ) )
 	    	return;
 
 	    $wft_filters = get_post_meta( $post_id, '_wft_old_filters', true );
-    	$wft_new_filters = $_POST['wft_filter'];
+    	$wft_new_filters = $_REQUEST['wft_filter'];
 
 	    if( !empty( $wft_filter ) ){
 	    	wp_delete_object_term_relationships( $post_id, $wft_filters );
 	    }
 
 	    update_post_meta( $post_id, '_wft_old_filters', $wft_new_filters );
-	    foreach ( $_POST['wft_filter'] as $key => $filter) {
+	    foreach ( $_REQUEST['wft_filter'] as $key => $filter) {
 	    	if( $filter ){
 	    		wp_set_post_terms( $post_id, $filter, $key );
 	    	}

@@ -17,6 +17,7 @@ class WFT_Assets
 
 	public function admin(){
 		wp_enqueue_script( 'wft-admin', WFT_URL . 'assets/js/admin/wft-admin.js' );
+        wp_enqueue_style( 'wft-front-style', WFT_URL . 'assets/css/admin/wft-style.css' );
 	}
 
 	public function front(){
